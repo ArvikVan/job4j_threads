@@ -1,6 +1,6 @@
 # job4j_threads
 [![Build Status](https://app.travis-ci.com/ArvikVan/job4j_threads.svg?branch=main)](https://app.travis-ci.com/ArvikVan/job4j_threads)
-[![codecov](https://codecov.io/gh/ArvikVan/job4j_threads/branch/master/graph/badge.svg?token=th7L9BE9TS)](https://codecov.io/gh/ArvikVan/job4j_threads)
+[![codecov](https://codecov.io/gh/ArvikVan/job4j_threads/branch/main/graph/badge.svg?token=th7L9BE9TS)](https://codecov.io/gh/ArvikVan/job4j_threads)
 
 ## Проект - Потоки<br>
 _Все задания из этого раздела, будут выполняться в этом репозитории._
