@@ -7,8 +7,17 @@ import java.net.URL;
 
 /**
  * @author arvikv
- * @version 1.0
+ * @version 1.1
  * @since 15.11.2021
+ * 1.1
+ * 7) Сохраняйте файл на диск не под константным именем pom_tmp.xml, а с таким же именем, что и в URL.
+ * 1) Определиться в каких единицах вы будете измерять пропускную способность. Чтобы меньше путаться
+ * - сделайте в байтах в секунду. Тогда если ограничивать скорость до 1 мегабайта в секунду -
+ * это 1 * 1024 * 1024 = 1048576 байт в секунду - эту цифру передавать вторым параметром. Это и будет speed.
+ * 3) Создайте переменную, например long bytesWrited, в нее на каждом цикле while плюсуйте количество записанных байт.
+ * Когда bytesWrited станет >= speed, то измерьте время, за которое это было сделано. Например long deltaTime
+ * 4) Если deltaTime < 1000 (1000 миллисекунд = 1 секунде), то вводим задержку равную остатку от секунды.
+ * 6) Хорошо, что проверяете размер args[], только сделайте отдельный метод-валидатор.
  */
 
 
@@ -33,17 +42,22 @@ public class Wget implements Runnable {
   @Override
   public void run() {
     try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-         FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {
-      byte[] dataBuffer = new byte[1024];
-      long start = System.currentTimeMillis();
+         FileOutputStream fileOutputStream = new FileOutputStream(url.substring(url.lastIndexOf('/') + 1))) {
+      byte[] dataBuffer = new byte[1048576];
       int bytesRead;
-      while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+      long bytesWrited = 0;
+
+      while ((bytesRead = in.read(dataBuffer, 0, 1048576)) != -1) {
+        long start = System.currentTimeMillis();
         fileOutputStream.write(dataBuffer, 0, bytesRead);
-        long finishTime = System.currentTimeMillis() - start;
-        
-        long duration = (finishTime - start) / 1000;
-        if (speed > duration) {
-          Thread.sleep((speed - duration) * 1000);
+        bytesWrited = bytesWrited + bytesRead;
+        System.out.print("\rload: " + bytesWrited + " bytes");
+
+        if (bytesWrited >= speed) {
+          long deltaTime = System.currentTimeMillis() - start;
+          if (deltaTime < 1000) {
+            Thread.sleep(1000 - deltaTime);
+          }
         }
         start = System.currentTimeMillis();
       }
@@ -53,13 +67,23 @@ public class Wget implements Runnable {
   }
 
   public static void main(String[] args) throws InterruptedException {
-    if (args.length != 2) {
-      throw new IllegalArgumentException();
-    }
+    extracted(args);
     String url = args[0];
     int speed = Integer.parseInt(args[1]);
     Thread wget = new Thread(new Wget(url, speed));
     wget.start();
     wget.join();
+  }
+
+  private static void extracted(String[] args) {
+    if (args.length == 0) {
+      throw new IllegalArgumentException("No arguments");
+    }
+    if (!args[0].startsWith("https")) {
+      throw new IllegalArgumentException("Check url");
+    }
+    if (Integer.parseInt(args[1]) <= 0) {
+      throw new IllegalArgumentException("Speed should be positive");
+    }
   }
 }
