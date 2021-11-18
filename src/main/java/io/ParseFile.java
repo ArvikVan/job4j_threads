@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 /**
  * @author ArvikV
- * @version 1.0
+ * @version 1.1
  * @since 18.11.2021
  * 2. Поправьте код с ошибками в коде.
  * - Избавиться от get set за счет передачи File в конструктор.
@@ -14,6 +14,9 @@ import java.util.function.Predicate;
  * - Нарушен принцип единой ответственности. Тут нужно сделать два класса.
  * - Методы getContent написаны в стиле копипаста.
  * Нужно применить шаблон стратегия. content(Predicate<Character> filter)
+ * 1.1
+ * 1) Сделайте возвращаемые значения методов класса ParseFile - String вместо StringBuilder
+ * 2) сделайте != -1 а то будет пропускать нули (см. описание read())
  */
 public final class ParseFile {
     private final File file;
@@ -27,11 +30,11 @@ public final class ParseFile {
      *
      * @return
      */
-    public StringBuilder content(Predicate<Character> filter) {
+    public String content(Predicate<Character> filter) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
             int data;
-            while ((data = inputStream.read()) > 0) {
+            while ((data = inputStream.read()) != 1) {
                     if (filter.test((char) data)) {
                         stringBuilder.append(data);
                     }
@@ -39,14 +42,14 @@ public final class ParseFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
-    public StringBuilder getContent() throws IOException {
+    public String getContent() throws IOException {
         return content(data -> true);
     }
 
-    public StringBuilder getContentWithoutUnicode() throws IOException {
+    public String getContentWithoutUnicode() throws IOException {
         return content(data -> data < 0x80);
     }
 
