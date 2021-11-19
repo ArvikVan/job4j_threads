@@ -8,8 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ArvikV
- * @version 1.0
+ * @version 1.1
  * @since 19.11.2021
+ * userFromId.getAmount() >= amount
  */
 
 @ThreadSafe
@@ -55,12 +56,13 @@ public class UserStorage {
      * @return на выходе узнаем откуда, куда
      * есди откуда не нулл, куда не нулл, и денег откуда больше чем надо перевести
      * то откуда отнимаем сколько надо перевести, а куда прибавляем сколько надо перевести
+     * 1.1 тут должно быть так userFromId.getAmount() >= amount
      */
     public synchronized boolean transfer(int fromId, int toId, int amount) {
         User userFromId = map.get(fromId);
         User userToId = map.get(toId);
         boolean result = false;
-        if (userToId != null && userFromId != null && userFromId.getAmount() > amount) {
+        if (userToId != null && userFromId != null && userFromId.getAmount() >= amount) {
             userFromId.setAmount(userToId.getAmount() - amount);
             userToId.setAmount(userToId.getAmount() + amount);
             result = true;
