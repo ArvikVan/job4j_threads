@@ -36,10 +36,10 @@ public final class SimpleBlockingQueue<T> {
   * ждем пока не заполнится список, заполняя
   */
  public synchronized void offer(T value) throws InterruptedException {
-       while (queue.size() >= this.limit) {
+       while (queue.size() == this.limit) {
         wait();
        }
-       queue.offer(value);
+       queue.add(value);
        notifyAll();
       }
 
@@ -51,11 +51,10 @@ public final class SimpleBlockingQueue<T> {
       */
       public synchronized T poll() throws InterruptedException {
        while (queue.isEmpty()) {
-        wait();
+           wait();
        }
-       T result = queue.poll();
        notifyAll();
-       return result;
+       return queue.poll();
       }
 
 
