@@ -50,4 +50,12 @@ public final class SimpleBlockingQueue<T> {
        notifyAll();
        return queue.poll();
       }
+
+    /**
+     * метод возвращает булево пустая ли коллекция
+     * @return на выходе труе, если коллекция пуста (размер коллекции равен 0)
+     */
+    public boolean isEmpty() {
+          return queue.size() == 0;
+    }
 }
