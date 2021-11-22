@@ -56,7 +56,14 @@ public class SimpleBlockingQueueTest {
         producer.join();
         consumer.join();
     }
-
+    /**
+     * while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+     * Здесь мы проверяем, что очередь пустая или нить выключили.
+     * В блоке catch нужно дополнительно вызывать прерывание нити
+     * для того чтобы прерывания действительно произошло.
+     * consumer.interrupt();
+     * выставляем флаг прерывания. Это рекомендации о том, чтобы нить завершала свою работу.
+     */
     @Test
     public void whenFetchAllThenGetIt() throws InterruptedException {
         final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
@@ -73,10 +80,6 @@ public class SimpleBlockingQueueTest {
                 }
         );
         producer.start();
-        /**
-         * while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
-         * Здесь мы проверяем, что очередь пустая или нить выключили.
-         */
         Thread consumer = new Thread(
                 () -> {
                     while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
@@ -84,10 +87,6 @@ public class SimpleBlockingQueueTest {
                             buffer.add(queue.poll());
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                            /**
-                             * В блоке catch нужно дополнительно вызывать прерывание нити
-                             * для того чтобы прерывания действительно произошло.
-                             */
                             Thread.currentThread().interrupt();
                         }
                     }
@@ -95,10 +94,6 @@ public class SimpleBlockingQueueTest {
         );
         consumer.start();
         producer.join();
-        /**
-         * consumer.interrupt();
-         * выставляем флаг прерывания. Это рекомендации о том, чтобы нить завершала свою работу.
-         */
         consumer.interrupt();
         consumer.join();
         assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
