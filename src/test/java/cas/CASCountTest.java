@@ -15,14 +15,14 @@ public class CASCountTest {
     public void whenTwoThreads() throws InterruptedException {
         CASCount count = new CASCount();
         Thread first = new Thread(
-                () -> IntStream.range(0, 5).forEach(x -> count.increment()));
+                () -> IntStream.range(0, 150).forEach(x -> count.increment()));
         Thread second = new Thread(
-                () -> IntStream.range(0, 5).forEach(x -> count.increment()));
+                () -> IntStream.range(0, 150).forEach(x -> count.increment()));
         first.start();
         second.start();
-        first.join();
+        first.join(2000);
         second.join();
-        assertThat(count.getValue(), is(10));
+        assertThat(count.getValue(), is(300));
 
     }
 
@@ -30,18 +30,17 @@ public class CASCountTest {
     public void whenThreeThreads() throws InterruptedException {
         CASCount count = new CASCount();
         Thread first = new Thread(
-                () -> IntStream.range(0, 3).forEach(a -> count.increment()));
+                () -> IntStream.range(0, 100).forEach(a -> count.increment()));
         Thread second = new Thread(
-                () -> IntStream.range(0, 4).forEach(a -> count.increment()));
+                () -> IntStream.range(0, 100).forEach(a -> count.increment()));
         Thread third = new Thread(
-                () -> IntStream.range(0, 5).forEach(a -> count.increment()));
+                () -> IntStream.range(0, 100).forEach(a -> count.increment()));
         first.start();
         second.start();
         third.start();
-        first.join();
+        first.join(1000);
         second.join();
         third.join();
-        assertThat(count.getValue(), is(12));
+        assertThat(count.getValue(), is(300));
     }
-
 }

@@ -19,7 +19,7 @@ public class CASCount {
      *
      */
     public void increment() {
-        int expectedCount;
+        Integer expectedCount;
         int newCount;
         do {
             expectedCount  = count.get();
