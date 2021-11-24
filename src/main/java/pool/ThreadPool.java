@@ -6,12 +6,13 @@ import java.util.List;
 
 /**
  * @author ArvikV
- * @version 1.1
+ * @version 1.2
  * @since 23.11.2021
  * 1.1
  * 1. Это должно быть быть в конструкторе
  * и при этом каждую нить надо запустить
  * 2. Добавьте хотя бы main() и проверьте работу пула
+ * 1.2 thread.join(1000); Это уберите. Из цикла запусков нитей
  */
 public class ThreadPool {
     private final int size = Runtime.getRuntime().availableProcessors();
@@ -41,8 +42,6 @@ public class ThreadPool {
         }
         for (Thread thread : threads) {
             thread.start();
-            thread.join(1000);
-
         }
     }
 
