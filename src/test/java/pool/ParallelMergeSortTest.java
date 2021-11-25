@@ -42,7 +42,7 @@ public class ParallelMergeSortTest {
         );
         ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
         int index = forkJoinPool.invoke(parallelMergeSort);
-        assertThat(-1, is(index));
+        assertThat(6, is(index));
     }
 
 }

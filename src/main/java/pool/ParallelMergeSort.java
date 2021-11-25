@@ -4,11 +4,12 @@ import java.util.concurrent.RecursiveTask;
 
 /**
  * @author ArvikV
- * @version 1.1
+ * @version 1.2
  * @since 25.11.2021
  * 1.1
  *  extends RecursiveTask сделайте параметризованным extends RecursiveTask<Integer>
  *  добавлен еще один тест
+ *  1.2 ваша текущая реализация в определенных случаях получает значение индекса -1, чего быть не должно
  */
 public class ParallelMergeSort extends RecursiveTask<Integer> {
     private final int[] array;
@@ -34,7 +35,7 @@ public class ParallelMergeSort extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from <= 10) {
-            for (int i = from; i < to; i++) {
+            for (int i = from; i <= to; i++) {
                 if (array[i] == findMe) {
                     return i;
                 }
@@ -43,7 +44,7 @@ public class ParallelMergeSort extends RecursiveTask<Integer> {
         }
         int mid = (from + to) / 2;
         ParallelMergeSort leftSort = new ParallelMergeSort(array, from, mid, findMe);
-        ParallelMergeSort rightSort = new ParallelMergeSort(array, mid + 1, to, findMe);
+        ParallelMergeSort rightSort = new ParallelMergeSort(array, mid + 1, to - 1, findMe);
         leftSort.fork();
         rightSort.fork();
         int left = leftSort.join();
