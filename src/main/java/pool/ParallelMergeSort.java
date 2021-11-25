@@ -4,10 +4,13 @@ import java.util.concurrent.RecursiveTask;
 
 /**
  * @author ArvikV
- * @version 1.0
+ * @version 1.1
  * @since 25.11.2021
+ * 1.1
+ *  extends RecursiveTask сделайте параметризованным extends RecursiveTask<Integer>
+ *  добавлен еще один тест
  */
-public class ParallelMergeSort extends RecursiveTask {
+public class ParallelMergeSort extends RecursiveTask<Integer> {
     private final int[] array;
     private final int from;
     private final int to;
@@ -29,7 +32,7 @@ public class ParallelMergeSort extends RecursiveTask {
      * если массив меньше 10 до получаем индекс сразу
      */
     @Override
-    protected Object compute() {
+    protected Integer compute() {
         if (to - from <= 10) {
             for (int i = from; i < to; i++) {
                 if (array[i] == findMe) {
@@ -43,8 +46,8 @@ public class ParallelMergeSort extends RecursiveTask {
         ParallelMergeSort rightSort = new ParallelMergeSort(array, mid + 1, to, findMe);
         leftSort.fork();
         rightSort.fork();
-        int left = (int) leftSort.join();
-        int right = (int) rightSort.join();
+        int left = leftSort.join();
+        int right = rightSort.join();
         return Math.max(left, right);
     }
 }
