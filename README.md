@@ -3,8 +3,8 @@
 [![codecov](https://codecov.io/gh/ArvikVan/job4j_threads/branch/main/graph/badge.svg?token=th7L9BE9TS)](https://codecov.io/gh/ArvikVan/job4j_threads)
 
 ## Проект - Потоки<br>
-_Все задания из этого раздела, будут выполняться в этом репозитории._
-
+_Все задания из этого раздела, будут выполняться в этом репозитории._ <br>
+_Внесены изменение согласно task_139841_
 ## Сборка и запуск<br>
 для сборки `mvn install`<br>
 для запуска`java -jar target/job4j_threads-1.0.jar`
